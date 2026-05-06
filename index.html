@@ -1,1 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karaoke Caravan | Mobile Karaoke Hire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #050505;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-wrap {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 0, 38, 0.32), transparent 32%),
+        linear-gradient(120deg, #030303 0%, #101010 48%, #270007 100%);
+    }
+
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      padding: 0 6vw 90px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 78px;
+      width: 24vw;
+      height: 100vh;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(255,0,30,0.08), transparent 74%);
+      filter: blur(6px);
+      opacity: .35;
+      transform-origin: top center;
+      z-index: -1;
+    }
+
+    .hero::before {
+      left: 12%;
+      transform: rotate(20deg);
+      clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+    }
+
+    .hero::after {
+      right: 12%;
+      transform: rotate(-20deg);
+      clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+    }
+
+    @keyframes spotlightSweep {
+      0%,100% { opacity: .35; }
+      50% { opacity: .8; }
+    }
+
+    .stage-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,.12) 1px, transparent 1px);
+      background-size: 26px 26px;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 22%, transparent 90%);
+      z-index: -2;
+    }
+
+    .red-orb {
+      position: absolute;
+      border-radius: 999px;
+      background: #e50914;
+      filter: blur(26px);
+      opacity: .25;
+      z-index: -1;
+    }
+      z-index: -1;
+    }
+
+    .orb-1 { width: 160px; height: 160px; left: 5%; top: 26%; }
+    .orb-2 { width: 230px; height: 230px; right: -60px; top: 18%; animation-delay: 1s; }
+    .orb-3 { width: 180px; height: 180px; left: 46%; bottom: 4%; animation-delay: 1.8s; }
+
+    @keyframes pulseOrb {
+      0%,100% { transform: scale(1); opacity: .35; }
+      50% { transform: scale(1.16); opacity: .68; }
+    }
+
+    nav {
+      position: relative;
+      z-index: 10;
+      width: calc(100% + 12vw);
+      margin-left: -6vw;
+      margin-right: -6vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 22px;
+      padding: 14px 6vw;
+      background: rgba(3,3,3,.88);
+      border-bottom: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 55px rgba(0,0,0,.55);
+      backdrop-filter: blur(18px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .logo img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 18px rgba(229,9,20,.95));
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      padding: 7px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+    }
+
+    .nav-links a {
+      padding: 11px 16px;
+      border-radius: 999px;
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      transition: .2s ease;
+    }
+
+    .nav-links a:hover {
+      color: white;
+      background: #e50914;
+      box-shadow: 0 0 24px rgba(229,9,20,.7);
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 22px;
+      background: linear-gradient(180deg, #ff2c37, #b80009);
+      color: white;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.15) inset, 0 6px 0 #5a0005;
+      transition: transform .15s ease;
+    }
+    }
+
+    .btn:hover {
+      transform: translateY(3px);
+    }
+
+    .btn.ghost {
+      background: rgba(255,255,255,.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 2;
+      max-width: 1220px;
+      margin: 0 auto;
+      padding-top: 90px;
+      display: grid;
+      grid-template-columns: 1fr .95fr;
+      gap: 54px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 15px;
+      margin-bottom: 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color: #ffbcc0;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Anton', Impact, sans-serif;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(66px, 9vw, 142px);
+      line-height: .82;
+      letter-spacing: .01em;
+      margin-bottom: 28px;
+      text-shadow: 0 0 24px rgba(229,9,20,.55), 0 10px 0 rgba(0,0,0,.7);
+    }
+
+    .red-text {
+      color: #ff1724;
+      -webkit-text-stroke: 1px rgba(255,255,255,.24);
+    }
+
+    .lead {
+      max-width: 650px;
+      padding-left: 22px;
+      border-left: 6px solid #e50914;
+      color: rgba(255,255,255,.78);
+      font-size: 20px;
+      line-height: 1.65;
+      margin-bottom: 34px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .stage-card {
+      position: relative;
+      min-height: 560px;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
+        #090909;
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 25px 70px rgba(0,0,0,.6);
+      overflow: hidden;
+    }
+    }
+
+    .stage-card::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -90px;
+      width: 140%;
+      height: 300px;
+      transform: translateX(-50%);
+      border-radius: 50% 50% 0 0;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 2px, transparent 2px 58px),
+        linear-gradient(180deg, #242424, #050505);
+      border-top: 2px solid rgba(255,255,255,.22);
+    }
+
+    .hero-logo-large {
+      position: absolute;
+      top: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(360px, 72%);
+      filter: drop-shadow(0 0 22px rgba(229,9,20,1)) drop-shadow(0 0 46px rgba(255,255,255,.25));
+      z-index: 4;
+    }
+
+    .chair {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      width: 280px;
+      height: 310px;
+      z-index: 3;
+      animation: chairBounce 2.4s ease-in-out infinite;
+    }
+
+    .chair-back {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 210px;
+      height: 245px;
+      border-radius: 36px 36px 26px 26px;
+      background: linear-gradient(135deg, #ff2330, #8f0008 72%);
+      border: 2px solid rgba(255,255,255,.24);
+      box-shadow: inset 18px 0 35px rgba(255,255,255,.12), inset -22px -12px 30px rgba(0,0,0,.38), 0 0 50px rgba(229,9,20,.6);
+    }
+
+    .chair-seat {
+      position: absolute;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      width: 260px;
+      height: 98px;
+      border-radius: 28px 28px 44px 44px;
+      background: linear-gradient(180deg, #1d1d1d, #050505);
+      border: 2px solid rgba(255,255,255,.18);
+      box-shadow: 0 22px 40px rgba(0,0,0,.65);
+    }
+
+    .chair-button {
+      position: absolute;
+      left: 50%;
+      bottom: 76px;
+      transform: translateX(-50%);
+      width: 88px;
+      height: 88px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 35% 28%, #fff, #ff3843 28%, #bc0009 72%);
+      border: 5px solid #2b0003;
+      box-shadow: 0 0 26px rgba(255,23,36,.85), 0 10px 0 #5a0005;
+    }
+
+    @keyframes chairBounce {
+      0%,100% { transform: translate(-50%, -50%) translateY(0); }
+      50% { transform: translate(-50%, -50%) translateY(-12px); }
+    }
+
+    .stat-strip {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      z-index: 5;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(0,0,0,.68);
+      border: 1px solid rgba(255,255,255,.16);
+      text-align: center;
+      box-shadow: 0 0 28px rgba(229,9,20,.18);
+    }
+
+    .stat strong {
+      display: block;
+      color: #ff1724;
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .content {
+      position: relative;
+      padding: 96px 6vw;
+      background: #080808;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+
+    .content:nth-of-type(even) {
+      background:
+        radial-gradient(circle at 8% 20%, rgba(229,9,20,.2), transparent 28%),
+        #101010;
+    }
+
+    .section-inner {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      max-width: 860px;
+      margin-bottom: 42px;
+    }
+
+    .section-title h2,
+    .booking-panel h2 {
+      font-size: clamp(46px, 5vw, 92px);
+      line-height: .9;
+      letter-spacing: .01em;
+      margin-bottom: 18px;
+      text-shadow: 0 0 22px rgba(229,9,20,.42);
+    }
+
+    .section-title p,
+    .booking-panel p {
+      color: rgba(255,255,255,.7);
+      font-size: 19px;
+      line-height: 1.62;
+      max-width: 700px;
+    }
+
+    .features,
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      position: relative;
+      padding: 26px;
+      min-height: 230px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      transition: transform .15s ease;
+    }
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -70px auto;
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: rgba(229,9,20,.24);
+      filter: blur(3px);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+    }
+
+    .icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: #e50914;
+      font-size: 28px;
+      margin-bottom: 22px;
+      box-shadow: 0 0 30px rgba(229,9,20,.55);
+    }
+
+    .card h3 {
+      font-size: 34px;
+      line-height: .95;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      color: rgba(255,255,255,.68);
+      line-height: 1.58;
+    }
+
+    .package-card.featured {
+      background: rgba(229,9,20,.15);
+      border-color: rgba(255,255,255,.2);
+    }
+
+    .price {
+      display: inline-block;
+      margin: 18px 0;
+      color: #ff1724;
+      font-size: 42px;
+      font-weight: 900;
+      text-shadow: 0 0 18px rgba(229,9,20,.65);
+    }
+
+    .small {
+      margin-top: 18px;
+      color: rgba(255,255,255,.52);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .booking {
+      background:
+        linear-gradient(120deg, rgba(229,9,20,.23), transparent 40%),
+        #050505;
+    }
+
+    .booking-grid {
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      gap: 32px;
+      align-items: ,.45);
+    }
+    }
+
+    .audition-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 24px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 25%, #fff, #ff2632 26%, #950008 78%);
+      color: white;
+      font-weight: 900;
+      text-align: center;
+      text-transform: uppercase;
+      box-shadow: 0 0 45px rgba(229,9,20,.75), 0 14px 0 #520005;
+    }
+
+    .song-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .song-tags span {
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.16);
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .contact-panel h3 {
+      font-size: 44px;
+      margin-bottom: 10px;
+    }
+
+    .contact-intro {
+      margin-bottom: 22px;
+    }
+
+    .contact-buttons {
+      display: grid;
+      gap: 14px;
+    }
+
+    .contact-btn {
+      width: 100%;
+      min-height: 58px;
+    }
+
+    .contact-note {
+      margin-top: 22px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(229,9,20,.16);
+      border: 1px solid rgba(255,23,36,.38);
+      color: #ffbcc0;
+      line-height: 1.5;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(0,0,0,.52);
+      color: white;
+      font: inherit;
+      outline: none;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #ff1724;
+      box-shadow: 0 0 0 4px rgba(229,9,20,.2), 0 0 30px rgba(229,9,20,.22);
+    }
+
+    textarea,
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .form-note {
+      grid-column: 1 / -1;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(229,9,20,.16);
+      border: 1px solid rgba(255,23,36,.38);
+      color: #ffbcc0;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    footer {
+      padding: 38px 6vw;
+      background: #030303;
+      border-top: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.68);
+    }
+
+    .footer-inner {
+      max-width: 1220px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-weight: 700;
+    }
+
+    @media (max-width: 940px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-grid,
+      .booking-grid,
+      .features,
+      .packages {
+        grid-template-columns: 1frn-items: stretch;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .section-title h2 {
+        text-align: center;
+      }
+    }
+
+      .hero-grid,
+      .booking-grid,
+      .features,
+      .packages {
+        grid-template-columns: 1fr;
+      }
+
+      .stage-card {
+        min-height: 560px;
+      }
+
+      .package-card.featured {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .hero {
+        padding-inline: 16px;
+      }
+
+      nav {
+        width: calc(100% + 32px);
+        margin-left: -16px;
+        margin-right: -16px;
+        padding: ;
+      }
+
+      .logo span:last-child {
+        display: none;
+      }
+
+      .nav-cta {
+        padding: 10px 14px;
+        font-size: 11px;
+      }
+
+      .hero-grid {
+        padding-top: 50px;
+        gap: 30px;
+      }
+
+      h1 {
+        font-size: clamp(44px, 14vw, 70px);
+      }
+
+      .lead {
+        font-size: 16px;
+      }
+
+      form {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-buttons {
+        gap: 10px;
+      }
+
+      .contact-btn {
+        font-size: 14px;
+        padding: 14px;
+      }
+
+      .stage-card {
+        min-height: 520px;
+      }
+
+      .chair {
+        top: 40%;
+        scale: .75;
+      }
+
+      .stat-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+      nav {
+        width: calc(100% + 36px);
+        margin-left: -18px;
+        margin-right: -18px;
+        padding: 12px 18px;
+      }
+
+      .logo img {
+        width: 58px;
+        height: 58px;
+      }
+
+      .logo span:last-child {
+        display: none;
+      }
+
+      .nav-cta {
+        padding: 12px 16px;
+        font-size: 12px;
+      }
+
+      .hero-grid {
+        padding-top: 58px;
+      }
+
+      h1 {
+        font-size: clamp(56px, 17vw, 86px);
+      }
+
+      .lead {
+        font-size: 17px;
+      }
+
+      form {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .stage-card {
+        min-height: 690px;
+      }
+
+      .chair {
+        top: 42%;
+        scale: .82;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <header class="hero" id="top">
+      <div class="stage-dots"></div>
+      <div class="red-orb orb-1"></div>
+      <div class="red-orb orb-2"></div>
+      <div class="red-orb orb-3"></div>
+
+      <nav>
+        <a class="logo" href="#top" aria-label="Karaoke Caravan home">
+          <img src="https://i.postimg.cc/YCyMBNt5/att-ZWSi-DODi-Ra-ZGn-Xu-Tpus67a29Yyf-Zp82Xciq9s8-Dq-ME.jpg" alt="Karaoke Caravan logo">
+          <span>Karaoke Caravan</span>
+        </a>
+        <div class="nav-links">
+          <a href="#why">The show</a>
+          <a href="#packages">Packages</a>
+          <a href="#booking">Book</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <a class="btn nav-cta" href="#booking">Enquire now</a>
+      </nav>
+
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">● Live stage energy · mobile karaoke hire</div>
+          <h1>Step into the <span class="red-text">spotlight</span></h1>
+          <p class="lead">
+            Karaoke Caravan brings talent-show drama to weddings, birthdays, festivals and corporate events. Big lights, big songs, big reactions — all packed into one unforgettable mobile stage.
+          </p>
+          <div class="hero-actions">
+            <a class="btn" href="#booking">Check availability</a>
+            <a class="btn ghost" href="#packages">View packages</a>
+          </div>
+        </div>
+
+        <div class="stage-card" aria-label="Talent show style karaoke stage">
+          <img class="hero-logo-large" src="https://i.postimg.cc/YCyMBNt5/att-ZWSi-DODi-Ra-ZGn-Xu-Tpus67a29Yyf-Zp82Xciq9s8-Dq-ME.jpg" alt="Karaoke Caravan logo">
+          <div class="chair" aria-hidden="true">
+            <div class="chair-back"></div>
+            <div class="chair-seat"></div>
+            <div class="chair-button"></div>
+          </div>
+          <div class="stat-strip">
+            <div class="stat"><strong>10k+</strong><span>Songs</span></div>
+            <div class="stat"><strong>2–8h</strong><span>Hire slots</span></div>
+            <div class="stat"><strong>100%</strong><span>Showtime</span></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="content" id="why">
+      <div class="section-inner">
+        <div class="section-title">
+          <h2>This is your main character moment.</h2>
+          <p>Forget quiet corner karaoke. This is dramatic lighting, proper sound, crowd hype and a red-button moment your guests will remember.</p>
+        </div>
+        <div class="features">
+          <article class="card">
+            <div class="icon">🎤</div>
+            <h3>Pro mics</h3>
+            <p>Clean vocals, punchy backing tracks and a setup that makes every singer feel like they are on live TV.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🔴</div>
+            <h3>Big red energy</h3>
+            <p>Stage lights, glossy red styling and a proper show atmosphere before the first chorus even starts.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🚐</div>
+            <h3>We roll in</h3>
+            <p>The caravan arrives ready to perform. We set up, run the queue and keep the crowd warmed up.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="packages">
+      <div class="section-inner">
+        <div class="section-title">
+          <h2>Choose your show package.</h2>
+          <p>From intimate party performances to full evening headline moments.</p>
+        </div>
+        <div class="packages">
+          <article class="card package-card">
+            <h3>Blind Audition</h3>
+            <div class="price">From £349</div>
+            <p>2 hours, up to 30 guests, host, lights, sound and crowd-ready song list.</p>
+            <div class="small">Best for birthdays and garden parties</div>
+          </article>
+          <article class="card package-card featured">
+            <h3>Battle Round</h3>
+            <div class="price">From £699</div>
+            <p>Half-day hire, queue hosting, pro sound and high-energy crowd warmups.</p>
+            <div class="small">Best for festivals and town events</div>
+          </article>
+          <article class="card package-card">
+            <h3>Grand Final</h3>
+            <div class="price">From £999</div>
+            <p>Evening hire, custom playlist, branded signage and big finale slot.</p>
+            <div class="small">Best for weddings and corporate events</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="content booking" id="booking">
+      <div class="section-inner booking-grid">
+        <div class="booking-panel">
+          <div class="audition-badge">Get<br>in<br>touch</div>
+          <h2>Book your slot.</h2>
+          <p>Call, email, or text us with your event date, location and guest count. We’ll get back to you with availability and the best package.</p>
+          <div class="song-tags">
+            <span>Weddings</span>
+            <span>Birthdays</span>
+            <span>Festivals</span>
+            <span>Corporate</span>
+            <span>Private parties</span>
+          </div>
+        </div>
+
+        <form class="booking-panel contact-panel" onsubmit="sendEmailEnquiry(event)">
+          <h3>Ready to sing?</h3>
+          <p class="contact-intro">Fill this in once, then send it by email or text.</p>
+
+          <label>
+            Your name
+            <input id="enquiryName" type="text" placeholder="Your name" required>
+          </label>
+
+          <label>
+            Event date
+            <input id="enquiryDate" type="date" required>
+          </label>
+
+          <label>
+            Location / venue
+            <input id="enquiryLocation" type="text" placeholder="Town, venue or postcode" required>
+          </label>
+
+          <label>
+            Guest count
+            <input id="enquiryGuests" type="number" min="1" placeholder="Approx. guests" required>
+          </label>
+
+          <label>
+            Event type
+            <select id="enquiryType">
+              <option>Birthday Party</option>
+              <option>Wedding</option>
+              <option>Corporate Event</option>
+              <option>Festival</option>
+              <option>Private Party</option>
+              <option>Other</option>
+            </select>
+          </label>
+
+          <label>
+            Your contact number
+            <input id="enquiryPhone" type="tel" placeholder="Your phone number">
+          </label>
+
+          <label class="full">
+            Extra details
+            <textarea id="enquiryDetails" placeholder="Timings, access, favourite songs, package preference..."></textarea>
+          </label>
+
+          <div class="contact-buttons full">
+            <button class="btn contact-btn" type="submit">Send by email</button>
+            <button class="btn contact-btn ghost" type="button" onclick="sendTextEnquiry()">Send by text</button>
+            <a class="btn contact-btn ghost" href="tel:07472346096">Call: 07472 346096</a>
+          </div>
+
+          <div class="contact-note full">
+            <strong>Tip:</strong> the email/text will open on the visitor’s device with all their details filled in, ready for them to press send.
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <footer id="contact">
+      <div class="footer-inner">
+        <p><strong>Karaoke Caravan</strong> — Mobile karaoke hire with full stage energy.</p>
+        <p>andyob7@icloud.com · 07472 346096</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function buildEnquiryMessage() {
+      const name = document.getElementById('enquiryName').value.trim();
+      const date = document.getElementById('enquiryDate').value;
+      const location = document.getElementById('enquiryLocation').value.trim();
+      const guests = document.getElementById('enquiryGuests').value.trim();
+      const type = document.getElementById('enquiryType').value;
+      const phone = document.getElementById('enquiryPhone').value.trim();
+      const details = document.getElementById('enquiryDetails').value.trim();
+
+      return `Hi Karaoke Caravan,
+
+I'd like to make a booking enquiry.
+
+Name: ${name}
+Event date: ${date}
+Location / venue: ${location}
+Guest count: ${guests}
+Event type: ${type}
+Contact number: ${phone || 'Not provided'}
+
+Extra details:
+${details || 'None provided'}
+
+Thanks,
+${name}`;
+    }
+
+    function sendEmailEnquiry(event) {
+      event.preventDefault();
+      const subject = encodeURIComponent('Booking Enquiry for Karaoke Caravan');
+      const body = encodeURIComponent(buildEnquiryMessage());
+      window.location.href = `mailto:andyob7@icloud.com?subject=${subject}&body=${body}`;
+    }
+
+    function sendTextEnquiry() {
+      const requiredFields = ['enquiryName', 'enquiryDate', 'enquiryLocation', 'enquiryGuests'];
+      const missingField = requiredFields.find(id => !document.getElementById(id).value.trim());
+
+      if (missingField) {
+        alert('Please fill in your name, event date, location and guest count first.');
+        return;
+      }
+
+      const body = encodeURIComponent(buildEnquiryMessage());
+      window.location.href = `sms:07472346096?&body=${body}`;
+    }
+  </script>
+</body>
+</html>
 
